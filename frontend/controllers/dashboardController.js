@@ -1,5 +1,7 @@
 const axios = require("axios");
 
+const API_URL = process.env.BACKEND_API_URL;
+
 exports.getDashboard = async (req, res) => {
   try {
     const token = req.cookies.session_token;
@@ -9,7 +11,7 @@ exports.getDashboard = async (req, res) => {
       );
     }
 
-    const response = await axios.get("http://localhost:8000/api/dashboard", {
+    const response = await axios.get(`${API_URL}/api/dashboard`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -36,7 +38,7 @@ exports.getDashboard = async (req, res) => {
 
       chartLabels: chartLabels,
       chartValues: chartValues,
-      reviews: [],
+      reviews: apiData.recent_feedbacks,
     });
   } catch (error) {
     console.error("Error fetching dashboard:", error.message);

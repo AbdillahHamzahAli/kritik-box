@@ -7,15 +7,20 @@ use BlakvGhost\PHPValidator\ValidatorException;
 
 require_once __DIR__ . "/../../config/Config.php";
 require_once __DIR__ . "/../repository/UserRepository.php";
+require_once __DIR__ . "/../repository/BusinessRepository.php";
 require_once __DIR__ . "/../models/UserModel.php";
 
 class UserService
 {
     private $userRepository;
+    private $businessRepository;
 
-    public function __construct(UserRepository $userRepository)
-    {
+    public function __construct(
+        UserRepository $userRepository,
+        BusinessRepository $businessRepository,
+    ) {
         $this->userRepository = $userRepository;
+        $this->businessRepository = $businessRepository;
     }
 
     public function createUser(array $data): object
@@ -89,6 +94,35 @@ class UserService
                 "email" => $user->email,
             ],
             "token" => $jwt,
+        ];
+    }
+    public function getProfile(int $userId): object
+    {
+        $user = $this->userRepository->findById($userId);
+        $countBusinesses = $this->businessRepository->countByUserId($userId);
+
+        if (!$user) {
+            throw new Exception("User not found");
+        }
+
+        $isPremium = false;
+        if (!empty($user->membership_expires_at)) {
+            $expiryDate = new DateTime($user->membership_expires_at);
+            $now = new DateTime();
+            if ($expiryDate > $now) {
+                $isPremium = true;
+            }
+        }
+
+        return (object) [
+            "id" => $user->id,
+            "name" => $user->name,
+            "username" => $user->username,
+            "email" => $user->email,
+            "count_businesses" => $countBusinesses,
+            "is_premium" => $isPremium,
+            "membership_expires_at" => $user->membership_expires_at,
+            "joined_at" => $user->created_at ?? null,
         ];
     }
 }

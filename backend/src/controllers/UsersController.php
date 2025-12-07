@@ -79,6 +79,29 @@ class UsersController
             ]);
         }
     }
+
+    public function me(int $userId): void
+    {
+        header("Content-Type: application/json");
+
+        try {
+            $profile = $this->userService->getProfile($userId);
+
+            echo json_encode([
+                "status" => "success",
+                "message" => "Profile retrieved",
+                "data" => $profile,
+            ]);
+        } catch (Exception $e) {
+            $code = $e->getMessage() === "User not found" ? 404 : 500;
+            http_response_code($code);
+            echo json_encode([
+                "status" => "error",
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
     // public function getAllUser() {}
     // public function getUserById($id) {}
     // public function editUserData($id) {}

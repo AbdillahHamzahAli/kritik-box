@@ -27,6 +27,11 @@ class DashboardService
         $rawWeeklyStats = $this->feedbackRepo->getWeeklyStats($userId);
         $chartData = $this->fillMissingDates($rawWeeklyStats);
 
+        $recentFeedbacks = $this->feedbackRepo->getRecentFeedbacksByUserId(
+            $userId,
+            5,
+        );
+
         return [
             "summary" => [
                 "total_businesses" => $totalBusinesses,
@@ -34,6 +39,7 @@ class DashboardService
                 "average_rating" => $avgRating,
             ],
             "chart" => $chartData,
+            "recent_feedbacks" => $recentFeedbacks,
         ];
     }
 

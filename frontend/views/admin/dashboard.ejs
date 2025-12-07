@@ -59,11 +59,12 @@
 
             <div class="recent-feedback-section">
                 <div style="padding: 20px; border-bottom: 1px solid var(--border-color);">
-                    <h2 class="section-title">Feedback Terbaru</h2>
+                    <h2 style="font-size: 1.1rem;">Feedback Terbaru</h2>
                 </div>
                 <table class="feedback-table">
                     <thead>
                         <tr>
+                            <th>Nama Bisnis</th>
                             <th>Rating</th>
                             <th>Pesan</th>
                             <th>Lokasi</th>
@@ -73,9 +74,10 @@
                         <% if (reviews && reviews.length > 0) { %>
                             <% reviews.forEach(function(review) { %>
                             <tr>
+                                <td><%= review.business_name %></td>
                                 <td><span class="rating-badge"><%= review.rating %> ★</span></td>
                                 <td style="color: var(--text-muted);"><%= review.text %></td>
-                                <td><%= review.location || 'Pusat' %></td>
+                                <td><%= review.business_location || 'Pusat' %></td>
                             </tr>
                             <% }); %>
                         <% } else { %>

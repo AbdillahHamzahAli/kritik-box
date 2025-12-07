@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/header') %>
+
+<body id="admin-dashboard">
+    <div class="admin-wrapper">
+
+        <%- include('../partials/sidebar', { page: 'settings' }) %>
+
+        <main class="admin-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Settings</h1>
+                <p class="page-subtitle">Kelola profil akun dan langganan Anda.</p>
+            </div>
+
+            <div class="settings-grid">
+
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar-large">
+                            <%= user.name.charAt(0).toUpperCase() %>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.25rem; margin-bottom: 4px; text-transform: capitalize;">
+                                <%= user.name %>
+                            </h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                                Member sejak <%= user.formatted_joined %>
+                            </p>
+
+                            <% if (user.is_premium) { %>
+                                <span class="badge" style="background: #FEF3C7; color: #92400E; margin-top: 8px; border: 1px solid #FCD34D;">
+                                    👑 Premium Member
+                                </span>
+                            <% } else { %>
+                                <span class="badge badge-gray" style="margin-top: 8px;">Free User</span>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <form>
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <input type="text" name="name" class="form-input" value="<%= user.name %>">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" name="username" class="form-input" value="<%= user.username %>" readonly style="background: #F9FAFB; cursor: not-allowed;">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" class="form-input" value="<%= user.email %>">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password Baru</label>
+                            <input type="password" name="password" class="form-input" placeholder="••••••••">
+                        </div>
+
+                        <!--<div style="display: flex; justify-content: flex-end; margin-top: 30px;">
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>-->
+                    </form>
+                </div>
+
+                <div class="right-column">
+
+                    <div class="plan-card <%= user.is_premium ? 'premium-tier' : 'free-tier' %>">
+
+                        <div class="plan-header">
+                            <h3 style="font-size: 1.1rem; font-weight: 700;">Subscription</h3>
+
+                            <% if (user.is_premium) { %>
+                                <span class="plan-badge badge-premium">PRO PLAN</span>
+                            <% } else { %>
+                                <span class="plan-badge badge-free">STARTER</span>
+                            <% } %>
+                        </div>
+
+                        <% if (user.is_premium) { %>
+                            <div style="margin-bottom: 20px; font-size: 0.9rem; color: #111;">
+                                <p style="color: var(--text-muted); font-size: 0.8rem;">Active until:</p>
+                                <strong><%= user.formatted_expires %></strong>
+                            </div>
+                        <% } %>
+
+                        <div class="usage-bar-container">
+                            <div class="usage-text">
+                                <span>Locations Used</span>
+                                <% if (user.usage.limit === 'Unlimited') { %>
+                                    <span><%= user.usage.used %> / ∞</span>
+                                <% } else { %>
+                                    <span><%= user.usage.used %> / <%= user.usage.limit %></span>
+                                <% } %>
+                            </div>
+
+                            <% if (user.usage.limit === 'Unlimited') { %>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%; background: #10B981;"></div>
+                                </div>
+                            <% } else { %>
+                                <% const percent = (user.usage.used / user.usage.limit) * 100 %>
+                                <div class="progress-bar">
+                                    <div class="progress-fill <%= percent > 80 ? 'warning' : '' %>" style="width: <%= percent %>%;"></div>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <ul style="margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); list-style: none;">
+                            <li style="margin-bottom: 8px;">✓ Basic Analytics</li>
+                            <li style="margin-bottom: 8px;">✓ Standard QR Code</li>
+
+                            <% if (user.is_premium) { %>
+                                <li style="margin-bottom: 8px; font-weight: 600; color: #059669;">✓ Export Data to Excel</li>
+                                <li style="margin-bottom: 8px; font-weight: 600; color: #059669;">✓ Unlimited Locations</li>
+                            <% } else { %>
+                                <li style="margin-bottom: 8px; opacity: 0.5;">✗ Export Data to Excel</li>
+                                <li style="margin-bottom: 8px; opacity: 0.5;">✗ Unlimited Locations</li>
+                            <% } %>
+                        </ul>
+
+                        <% if (!user.is_premium) { %>
+                            <div class="upgrade-box">
+                                <h4>Unlock Pro Features ⚡</h4>
+                                <p>Hilangkan batasan lokasi dan dapatkan fitur export data.</p>
+                                <button class="btn btn-primary" style="background: white; color: black; width: 100%; border: none;">
+                                    Upgrade to Pro
+                                </button>
+                            </div>
+                        <% } else { %>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 20px; border-color: #D1D5DB; color: #374151;">
+                                Manage Subscription
+                            </button>
+                        <% } %>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>

@@ -1,49 +1,148 @@
 <!DOCTYPE html>
 <html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KritikBox - Tingkatkan Bisnis dengan Feedback</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
 
-<%- include('partials/header') %>
+    <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
+</head>
 
-<body id="landing-page">
-    <div class="container landing-main-content">
-        <nav class="navbar">
-            <div class="nav-brand">Kritik Box</div>
-            <div class="nav-links">
-                <a href="/auth/register">Daftar Akun</a>
-                <a href="/auth/login" class="btn btn-outline">Masuk</a>
-                <a href="#">Tentang Kami</a>
+<body class="landing-wrapper">
+
+    <nav class="navbar landing-container" style="padding-top: 20px; padding-bottom: 20px;">
+        <div class="nav-brand" style="font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; gap: 8px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l5 5v-5h6c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14h-6l-3 3v-3H3V4h18v12z"/></svg>
+            KritikBox
+        </div>
+        <div class="nav-links">
+            <a href="#features">Fitur</a>
+            <a href="#pricing">Harga</a>
+            <a href="/auth/login" style="font-weight: 600;">Masuk</a>
+            <a href="/auth/register" class="btn btn-primary" style="padding: 10px 20px;">Daftar Gratis</a>
+        </div>
+    </nav>
+
+    <section class="hero-section landing-container">
+        <div class="hero-text">
+            <h1>Dengarkan Pelanggan, <br>Tumbuhkan Bisnis.</h1>
+            <p>Platform all-in-one untuk mengumpulkan feedback, mengelola reputasi cabang, dan meningkatkan kepuasan pelanggan Anda.</p>
+            <div class="hero-buttons">
+                <a href="/auth/register" class="btn btn-primary" style="padding: 16px 32px; font-size: 1.1rem;">Mulai Sekarang</a>
+                <a href="#" class="btn btn-outline" style="padding: 16px 32px; font-size: 1.1rem; border-color: #E5E7EB; color: #111;">Demo Live</a>
             </div>
-        </nav>
+        </div>
 
-        <header class="hero">
-            <div class="hero-content">
-                <h1>Daftarkan Usahamu<br>Di Sini!</h1>
-                <p>Tidak perlu menghitung manual, kami punya solusi untuk tracking review, segera bergabung sekarang!</p>
-                <a href="/auth/register" class="btn btn-primary">Bergabung</a>
-            </div>
-
-            <div class="hero-reviews">
-                <div class="review-card">
-                    <div class="stars">★★★★★</div>
-                    <p class="review-text">Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit.</p>
-                    <div class="user-profile">
-                        <div class="avatar"></div>
-                        <span>Hamzah Ali</span>
-                    </div>
+        <div class="hero-visual">
+            <div class="dashboard-mockup">
+                <div class="mockup-header">
+                    <div class="dot" style="background:#EF4444"></div>
+                    <div class="dot" style="background:#F59E0B"></div>
+                    <div class="dot" style="background:#10B981"></div>
                 </div>
-                <div class="review-card">
-                    <div class="stars">★★★★★</div>
-                    <p class="review-text">Adipiscing elit quisque faucibus ex sapien vitae pellentesque.</p>
-                    <div class="user-profile">
-                        <div class="avatar"></div>
-                        <span>Ami</span>
+                <div style="font-weight:700; font-size: 1.5rem; margin-bottom: 4px;">4.8 <span style="font-size: 1rem; color:#6B7280; font-weight:500">Avg Rating</span></div>
+                <div style="color:#10B981; font-weight:600; margin-bottom: 20px;">↗ 12% vs last month</div>
+                <div class="mockup-body">
+                    <div class="bar" style="height: 40%"></div>
+                    <div class="bar" style="height: 60%"></div>
+                    <div class="bar active" style="height: 90%; position: relative;">
+                        <div style="position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #111; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">92 Reviews</div>
                     </div>
+                    <div class="bar" style="height: 70%"></div>
+                    <div class="bar" style="height: 50%"></div>
                 </div>
             </div>
-        </header>
-    </div>
+            <div style="position: absolute; bottom: -20px; left: -20px; background: white; padding: 16px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; gap: 12px; align-items: center; border: 1px solid #E5E7EB;">
+                <div style="background: #ECFDF5; color: #059669; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">★</div>
+                <div>
+                    <div style="font-weight: 700; font-size: 0.9rem;">Review Baru!</div>
+                    <div style="font-size: 0.8rem; color: #6B7280;">Cabang Surabaya Pusat</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <footer class="footer-landing">
-        Copyright © Hamzah & Ami. All Rights Reserved.
+    <section id="features" class="features-section">
+        <div class="landing-container">
+            <div class="section-title">
+                <h2>Fitur Lengkap untuk UMKM</h2>
+                <p>Semua yang Anda butuhkan untuk manajemen feedback modern.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>QR Code Generator</h3>
+                    <p>Buat kode QR unik untuk setiap meja atau cabang. Pelanggan cukup scan untuk memberi ulasan.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Pantau performa kepuasan pelanggan dalam grafik harian. Ketahui masalah sebelum viral.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏢</div>
+                    <h3>Multi-Cabang</h3>
+                    <p>Kelola puluhan cabang dalam satu dashboard terpusat. Bandingkan performa antar lokasi.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="pricing-section landing-container">
+        <div class="section-title">
+            <h2>Pilih Paket Sesuai Kebutuhan</h2>
+            <p>Mulai gratis, upgrade saat bisnis Anda berkembang.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">Rp 0 <span class="period">/bln</span></div>
+                <p style="color: #6B7280; margin-bottom: 24px;">Untuk warung atau cafe kecil yang baru mulai.</p>
+
+                <ul class="pricing-features">
+                    <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> 1 Lokasi Bisnis</li>
+                    <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> 50 Feedback / bulan</li>
+                    <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> QR Code Standar</li>
+                </ul>
+
+                <a href="/auth/register" class="btn btn-outline" style="width: 100%; justify-content: center; border-color: #E5E7EB; color: #111;">Daftar Gratis</a>
+            </div>
+
+            <div class="pricing-card premium">
+                <div style="display: flex; justify-content: space-between;">
+                    <h3>Pro Business</h3>
+                    <span style="background: #F59E0B; color: black; font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 4px; height: fit-content;">BEST VALUE</span>
+                </div>
+                <div class="price">Rp 99rb <span class="period" style="color: rgba(255,255,255,0.6)">/bln</span></div>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 24px;">Untuk bisnis berkembang dengan banyak cabang.</p>
+
+                <ul class="pricing-features">
+                    <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Unlimited Lokasi</li>
+                    <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Unlimited Feedback</li>
+                    <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Export Data (Excel/PDF)</li>
+                    <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Prioritas Support</li>
+                </ul>
+
+                <a href="/auth/register" class="btn" style="width: 100%; justify-content: center; background: white; color: black;">Coba Gratis 14 Hari</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section landing-container">
+        <div class="cta-box">
+            <h2>Siap Mendengarkan Pelanggan?</h2>
+            <p>Bergabung dengan 500+ bisnis lainnya yang telah meningkatkan layanan mereka.</p>
+            <a href="/auth/register" class="btn btn-primary" style="background: white; color: black; padding: 16px 40px; font-size: 1.1rem;">Buat Akun Sekarang</a>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; color: #6B7280; font-size: 0.9rem; border-top: 1px solid #E5E7EB;">
+        <p>&copy; 2025 KritikBox. All rights reserved.</p>
     </footer>
+
 </body>
 </html>

@@ -7,6 +7,7 @@ use BlakvGhost\PHPValidator\ValidatorException;
 
 require_once __DIR__ . "/../../config/Config.php";
 require_once __DIR__ . "/../repository/FeedbackRepository.php";
+require_once __DIR__ . "/../repository/BusinessRepository.php";
 require_once __DIR__ . "/../models/FeedbackModel.php";
 
 class FeedbackService

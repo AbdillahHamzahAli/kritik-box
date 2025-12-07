@@ -118,7 +118,6 @@ class FeedbackRepository
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            // Hasil mentah: [['date' => '2023-12-01', 'count' => 5], ...]
         } catch (PDOException $e) {
             return [];
         }
@@ -127,8 +126,6 @@ class FeedbackRepository
     public function getAverageRatingByUserId(int $userId): float
     {
         try {
-            // Gunakan fungsi agregasi AVG() dari MySQL
-            // Kita JOIN ke businesses untuk filter berdasarkan user_id pemilik bisnis
             $query = "SELECT AVG(f.rating) as avg_rating
                           FROM feedbacks f
                           JOIN businesses b ON f.business_id = b.id
@@ -143,6 +140,29 @@ class FeedbackRepository
             return (float) ($result["avg_rating"] ?? 0);
         } catch (PDOException $e) {
             return 0.0;
+        }
+    }
+
+    public function getRecentFeedbacksByUserId(
+        int $userId,
+        int $limit = 5,
+    ): array {
+        try {
+            $query = "SELECT f.id, f.rating, f.text, f.created_at, b.name as business_name, b.location as business_location
+                          FROM feedbacks f
+                          JOIN businesses b ON f.business_id = b.id
+                          WHERE b.user_id = :user_id
+                          ORDER BY f.created_at DESC
+                          LIMIT :limit";
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":user_id", $userId);
+            $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return [];
         }
     }
 }

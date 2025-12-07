@@ -1,11 +1,10 @@
 const axios = require("axios");
+const API_URL = process.env.BACKEND_API_URL;
 
 exports.getFeedbackForm = async (req, res) => {
   const { code } = req.params;
 
-  const response = await axios.get(
-    `http://localhost:8000/api/public/business/${code}`,
-  );
+  const response = await axios.get(`${API_URL}/api/public/business/${code}`);
 
   const business = response.data.data;
 
@@ -29,13 +28,10 @@ exports.submitFeedback = async (req, res) => {
 
   console.log("Received feedback:", req.body);
   try {
-    const response = await axios.post(
-      `http://localhost:8000/api/feedback/${code}`,
-      {
-        rating: Number(rating),
-        text: comment,
-      },
-    );
+    const response = await axios.post(`${API_URL}/api/feedback/${code}`, {
+      rating: Number(rating),
+      text: comment,
+    });
 
     if (response.status === 201) {
       res.status(201).json({

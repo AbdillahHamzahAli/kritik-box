@@ -1,4 +1,5 @@
 const axios = require("axios");
+const API_URL = process.env.BACKEND_API_URL;
 
 exports.getBusinessPage = async (req, res) => {
   try {
@@ -9,13 +10,15 @@ exports.getBusinessPage = async (req, res) => {
       );
     }
 
-    const response = await axios.get("http://localhost:8000/api/business", {
+    const response = await axios.get(`${API_URL}/api/business`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
     const businessData = response.data.data;
+
+    console.log;
 
     res.render("admin/business", {
       title: "Business Management",
@@ -49,7 +52,7 @@ exports.createBusiness = async (req, res) => {
 
     const { name, location, address } = req.body;
     await axios.post(
-      "http://localhost:8000/api/business",
+      `${API_URL}/api/business`,
       {
         name,
         location,
@@ -75,7 +78,7 @@ exports.updateBusiness = async (req, res) => {
     const { id, name, location, address } = req.body;
 
     await axios.put(
-      `http://localhost:8000/api/business/${id}`,
+      `${API_URL}api/business/${id}`,
       {
         name,
         location,
@@ -102,7 +105,7 @@ exports.deleteBusiness = async (req, res) => {
     }
     const { id } = req.body;
 
-    await axios.delete(`http://localhost:8000/api/business/${id}`, {
+    await axios.delete(`${API_URL}/api/business/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

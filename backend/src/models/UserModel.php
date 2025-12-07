@@ -9,5 +9,6 @@ class UserModel
         public string $email,
         public string $password,
         public ?string $membership_expires_at = null,
+        public ?string $created_at = null,
     ) {}
 }

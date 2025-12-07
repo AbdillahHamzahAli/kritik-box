@@ -17,35 +17,29 @@ require_once __DIR__ . "/../controllers/PaymentController.php";
 require_once __DIR__ . "/../services/DashboardService.php";
 require_once __DIR__ . "/../controllers/DashboardController.php";
 
-// --- USER ---
-$userRepository = new UserRepository();
-$userService = new UserService($userRepository);
-$usersController = new UsersController($userService);
 $authMiddleware = new AuthMiddleware();
 
-// --- BUSINESS ---
+$userRepository = new UserRepository();
 $businessRepository = new BusinessRepository();
-$businessService = new BusinessService($businessRepository, $userRepository);
-$businessesController = new BusinessController($businessService);
-
-// --- FEEDBACK ---
 $feedbackRepository = new FeedbackRepository();
+$transactionRepository = new TransactionRepository();
+
+$userService = new UserService($userRepository, $businessRepository);
+$businessService = new BusinessService($businessRepository, $userRepository);
 $feedbackService = new FeedbackService(
     $feedbackRepository,
     $businessRepository,
 );
-$feedbacksController = new FeedbackController($feedbackService);
-
-// --- PAYMENT ---
-$transactionRepository = new TransactionRepository();
 $paymentService = new PaymentService($transactionRepository, $userRepository);
-$paymentController = new PaymentController($paymentService);
-
-// --- DASHBOARD ---
 $dashboardService = new DashboardService(
     $businessRepository,
     $feedbackRepository,
 );
+
+$usersController = new UsersController($userService);
+$businessesController = new BusinessController($businessService);
+$feedbacksController = new FeedbackController($feedbackService);
+$paymentController = new PaymentController($paymentService);
 $dashboardController = new DashboardController($dashboardService);
 
 // --- ROUTING ---
@@ -69,6 +63,9 @@ if ($requestUri == "/") {
     $usersController->register();
 } elseif ($requestUri == "/api/login" && $requestMethod == "POST") {
     $usersController->login();
+} elseif ($requestUri == "/api/me" && $requestMethod == "GET") {
+    $user = $authMiddleware->handle();
+    $usersController->me($user->id);
 } elseif ($requestUri == "/api/business") {
     $user = $authMiddleware->handle();
     switch ($requestMethod) {

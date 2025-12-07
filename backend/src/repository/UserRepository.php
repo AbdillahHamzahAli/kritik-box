@@ -81,11 +81,12 @@ class UserRepository
             if ($row) {
                 return new UserModel(
                     $row["id"],
-                    $row["email"],
                     $row["name"],
                     $row["username"],
+                    $row["email"],
                     $row["password"],
                     $row["membership_expires_at"],
+                    $row["created_at"],
                 );
             }
             return null;
