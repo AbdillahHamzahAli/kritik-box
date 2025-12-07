@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<%- include('../partials/header') %>
+
+<body id="auth-section">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Selamat datang kembali!</h2>
+            <p>Segera masuk sebagai admin, lalu track usaha anda.</p>
+        </div>
+
+        <% if (locals.error) { %>
+            <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <% if (locals.success) { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <form action="/auth/login" method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="Masukkan email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="Masukkan password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">Masuk</button>
+        </form>
+
+        <div style="margin-top: 15px; text-align: center; font-size: 0.9rem;">
+            Belum punya akun? <a href="/auth/register" style="font-weight: bold;">Daftar</a>
+        </div>
+    </div>
+</body>
+</html>

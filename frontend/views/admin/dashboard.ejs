@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/header') %>
+
+<body id="admin-dashboard">
+    <div class="admin-wrapper">
+
+        <%- include('../partials/sidebar', { page: 'dashboard' }) %>
+
+        <main class="admin-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Overview kinerja feedback bisnis Anda.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-label">Total Feedback</div>
+                        <div class="stat-value"><%= stats.total_feedbacks %></div>
+                    </div>
+                    <div class="stat-trend trend-up">
+                        <span>Data Aktual</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-label">Total Business</div>
+                        <div class="stat-value"><%= stats.total_businesses %></div>
+                    </div>
+                    <div class="stat-trend">
+                        <span style="color: var(--text-muted);">Cabang terdaftar</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div>
+                        <div class="stat-label">Average Rating</div>
+                        <div class="stat-value"><%= stats.average_rating %></div>
+                    </div>
+                    <div class="stat-trend trend-up">
+                        <span style="color: var(--text-muted);">Rata-rata</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="chart-section">
+                <div class="section-header">
+                    <h2 class="section-title">Tren Feedback (7 Hari Terakhir)</h2>
+                    <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;">Last 7 Days</button>
+                </div>
+                <div style="height: 300px; width: 100%;">
+                    <canvas id="feedbackChart"></canvas>
+                </div>
+            </div>
+
+            <div class="recent-feedback-section">
+                <div style="padding: 20px; border-bottom: 1px solid var(--border-color);">
+                    <h2 class="section-title">Feedback Terbaru</h2>
+                </div>
+                <table class="feedback-table">
+                    <thead>
+                        <tr>
+                            <th>Rating</th>
+                            <th>Pesan</th>
+                            <th>Lokasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (reviews && reviews.length > 0) { %>
+                            <% reviews.forEach(function(review) { %>
+                            <tr>
+                                <td><span class="rating-badge"><%= review.rating %> ★</span></td>
+                                <td style="color: var(--text-muted);"><%= review.text %></td>
+                                <td><%= review.location || 'Pusat' %></td>
+                            </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr><td colspan="4" style="text-align:center;">Belum ada data.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('feedbackChart').getContext('2d');
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(17, 24, 39, 0.2)');
+        gradient.addColorStop(1, 'rgba(17, 24, 39, 0)');
+        const labelsFromAPI = <%- JSON.stringify(chartLabels) %>;
+        const dataFromAPI = <%- JSON.stringify(chartValues) %>;
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labelsFromAPI,
+                datasets: [{
+                    label: 'Feedback Masuk',
+                    data: dataFromAPI,
+                    borderColor: '#111827',
+                    backgroundColor: gradient,
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#9CA3AF' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        border: { display: false },
+                        grid: { color: '#F3F4F6' },
+                        ticks: {
+                            color: '#9CA3AF',
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

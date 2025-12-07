@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id">
+<%- include('../partials/header') %>
+
+<body id="admin-dashboard">
+    <div class="admin-wrapper">
+
+        <%- include('../partials/sidebar', { page: 'business' }) %>
+
+        <main class="admin-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Business Management</h1>
+                <p class="page-subtitle">Kelola daftar cabang dan lokasi bisnis Anda.</p>
+            </div>
+
+            <div class="toolbar">
+                <input type="text" id="searchInput" class="search-input" placeholder="Cari nama bisnis, lokasi, atau alamat..." onkeyup="searchTable()">
+                <button class="btn btn-primary" onclick="toggleModal(true)" style="padding: 8px 16px; font-size: 0.9rem;">
+                    + Add Business
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" class="custom-checkbox"></th>
+                            <th>Business Name</th>
+                            <th>Location</th>
+                            <th>Address</th>
+                            <th style="width: 50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <% if (businesses && businesses.length > 0) { %>
+                            <% businesses.forEach(function(item) { %>
+                                <tr class="business-row">
+                                    <td><input type="checkbox" class="custom-checkbox"></td>
+
+                                    <td class="col-name"><%= item.name %></td>
+
+                                    <td><span class="badge badge-gray"><%= item.location %></span></td>
+
+                                    <td class="col-address"><%= item.address %></td>
+
+                                    <td style="text-align: right;">
+                                        <div class="action-wrapper">
+                                            <button class="kebab-btn" onclick="toggleDropdown(this, event)">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="1"></circle>
+                                                    <circle cx="12" cy="5" r="1"></circle>
+                                                    <circle cx="12" cy="19" r="1"></circle>
+                                                </svg>
+                                            </button>
+
+                                            <div class="action-dropdown">
+
+                                                <button class="dropdown-item" onclick="openEditModal('<%= item.id %>', '<%= item.name %>', '<%= item.location %>', '<%= item.address %>')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                    Edit
+                                                </button>
+
+                                                    <button class="dropdown-item" onclick="showQrModal('<%= item.qrcode %>', '<%= item.name %>')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                                        Show QR
+                                                    </button>
+
+                                                <div class="dropdown-divider"></div>
+
+                                                <button class="dropdown-item danger" onclick="openDeleteModal('<%= item.id %>', '<%= item.name %>')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 20px; color: #888;">
+                                    Belum ada data bisnis.
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+                <div id="noResultsMessage" style="display: none; text-align: center; padding: 20px; color: #888;">
+                    Tidak ada data yang cocok.
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="addBusinessModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Tambah Lokasi Bisnis</h3>
+                <button type="button" class="close-modal-btn" onclick="toggleModal(false)">×</button>
+            </div>
+            <form action="/admin/business/add" method="POST">
+                <div class="form-group">
+                    <label>Nama Bisnis</label>
+                    <input type="text" name="name" class="form-input" placeholder="Contoh: Kogu Space - Cabang 2" required>
+                </div>
+                <div class="form-group">
+                    <label>Lokasi (Kota/Area)</label>
+                    <input type="text" name="location" class="form-input" placeholder="Contoh: Surabaya" required>
+                </div>
+                <div class="form-group">
+                    <label>Alamat Lengkap</label>
+                    <textarea name="address" class="form-input" rows="3" placeholder="Alamat jalan, nomor, dll..." required style="height: auto; resize: none;"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="toggleModal(false)">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Bisnis</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editBusinessModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Data Bisnis</h3>
+                <button type="button" class="close-modal-btn" onclick="toggleEditModal(false)">×</button>
+            </div>
+            <form action="/admin/business/update" method="POST">
+                <input type="hidden" id="editId" name="id">
+                <input type="hidden" id="editQrcode" name="qrcode">
+
+                <div class="form-group">
+                    <label>Nama Bisnis</label>
+                    <input type="text" id="editName" name="name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Lokasi (Kota/Area)</label>
+                    <input type="text" id="editLocation" name="location" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Alamat Lengkap</label>
+                    <textarea id="editAddress" name="address" class="form-input" rows="3" required style="height: auto; resize: none;"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="toggleEditModal(false)">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteBusinessModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: #EF4444;">Hapus Bisnis?</h3>
+                <button type="button" class="close-modal-btn" onclick="toggleDeleteModal(false)">×</button>
+            </div>
+            <p style="color: #666; margin-bottom: 24px;">
+                Apakah Anda yakin ingin menghapus <strong id="deleteBusinessName" style="color: #000;"></strong>?
+                <br>Tindakan ini tidak dapat dibatalkan.
+            </p>
+            <form action="/admin/business/delete" method="POST">
+                <input type="hidden" id="deleteId" name="id">
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="toggleDeleteModal(false)">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #EF4444; border:none;">Ya, Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="qrBusinessModal" class="modal-overlay">
+            <div class="modal-card" style="max-width: 400px; text-align: center;">
+                <div class="modal-header">
+                    <h3 class="modal-title">QR Code Feedback</h3>
+                    <button type="button" class="close-modal-btn" onclick="toggleQrModal(false)">×</button>
+                </div>
+
+                <p style="color: #666; margin-bottom: 20px;">
+                    Scan untuk memberi feedback pada: <br>
+                    <strong id="qrBusinessNameTitle" style="color: #000; font-size: 1.1rem;"></strong>
+                </p>
+
+                <div id="qrContainer" style="display: flex; justify-content: center; margin: 20px 0;"></div>
+
+                <p id="qrUrlText" style="font-size: 0.8rem; color: #888; margin-bottom: 20px; word-break: break-all;"></p>
+
+                <div class="modal-actions" style="justify-content: center;">
+                    <button type="button" class="btn btn-outline" onclick="toggleQrModal(false)">Tutup</button>
+                    <button type="button" class="btn btn-primary" onclick="downloadQr()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Download PNG
+                    </button>
+                </div>
+            </div>
+        </div>
+    <script>
+        function toggleDropdown(button, event) {
+            event.stopPropagation();
+            closeAllDropdowns();
+
+            const dropdown = button.nextElementSibling;
+
+            dropdown.style.top = '';
+            dropdown.style.bottom = '';
+            dropdown.style.transformOrigin = '';
+
+            const rect = button.getBoundingClientRect();
+            const spaceBelow = window.innerHeight - rect.bottom;
+            const dropdownHeight = 200;
+            if (spaceBelow < dropdownHeight) {
+                dropdown.style.top = 'auto';
+                dropdown.style.bottom = '100%';
+                dropdown.style.marginTop = '0';
+                dropdown.style.marginBottom = '8px';
+                dropdown.style.transformOrigin = 'bottom right';
+            } else {
+                dropdown.style.top = '100%';
+                dropdown.style.bottom = 'auto';
+                dropdown.style.marginTop = '4px';
+                dropdown.style.marginBottom = '0';
+                dropdown.style.transformOrigin = 'top right';
+            }
+
+            dropdown.classList.toggle('show');
+            button.classList.toggle('active');
+        }
+
+        function closeAllDropdowns() {
+            document.querySelectorAll('.action-dropdown').forEach(menu => {
+                menu.classList.remove('show');
+            });
+            document.querySelectorAll('.kebab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.kebab-btn') && !event.target.closest('.kebab-btn')) {
+                closeAllDropdowns();
+            }
+        }
+
+        function showQrModal(qrCode, name) {
+            alert(`Menampilkan QR Code untuk: ${name}\nKode ID: ${qrCode}`);
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('addBusinessModal');
+            if (show) modal.classList.add('active');
+            else modal.classList.remove('active');
+        }
+
+        function toggleEditModal(show) {
+            const modal = document.getElementById('editBusinessModal');
+            if (show) modal.classList.add('active');
+            else modal.classList.remove('active');
+        }
+
+        function toggleDeleteModal(show) {
+            const modal = document.getElementById('deleteBusinessModal');
+            if (show) modal.classList.add('active');
+            else modal.classList.remove('active');
+        }
+
+        function openEditModal(id, name, location, address, qrcode) {
+            document.getElementById('editId').value = id;
+            document.getElementById('editQrcode').value = qrcode;
+            document.getElementById('editName').value = name;
+            document.getElementById('editLocation').value = location;
+            document.getElementById('editAddress').value = address;
+            toggleEditModal(true);
+        }
+
+        function openDeleteModal(id, name) {
+            document.getElementById('deleteId').value = id;
+            document.getElementById('deleteBusinessName').innerText = name;
+            toggleDeleteModal(true);
+        }
+
+        document.getElementById('addBusinessModal').addEventListener('click', function(e) {
+            if (e.target === this) toggleModal(false);
+        });
+        document.getElementById('editBusinessModal').addEventListener('click', function(e) {
+            if (e.target === this) toggleEditModal(false);
+        });
+        document.getElementById('deleteBusinessModal').addEventListener('click', function(e) {
+            if (e.target === this) toggleDeleteModal(false);
+        });
+
+        function searchTable() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toLowerCase();
+            const tbody = document.getElementById("tableBody");
+            const rows = tbody.getElementsByTagName("tr");
+            let hasVisibleRow = false;
+
+            for (let i = 0; i < rows.length; i++) {
+                const nameCol = rows[i].getElementsByTagName("td")[1];
+                const locCol  = rows[i].getElementsByTagName("td")[2];
+                const addrCol = rows[i].getElementsByTagName("td")[3];
+
+                if (nameCol || locCol || addrCol) {
+                    const nameText = nameCol.textContent || nameCol.innerText;
+                    const locText  = locCol.textContent  || locCol.innerText;
+                    const addrText = addrCol.textContent || addrCol.innerText;
+
+                    if (
+                        nameText.toLowerCase().indexOf(filter) > -1 ||
+                        locText.toLowerCase().indexOf(filter) > -1 ||
+                        addrText.toLowerCase().indexOf(filter) > -1
+                    ) {
+                        rows[i].style.display = "";
+                        hasVisibleRow = true;
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+
+            const noResults = document.getElementById("noResultsMessage");
+            if (!hasVisibleRow) {
+                noResults.style.display = "block";
+            } else {
+                noResults.style.display = "none";
+            }
+        }
+
+        // --- VARIABEL GLOBAL UNTUK MENYIMPAN OBJECT QR ---
+            let qrCodeObj = null;
+
+            function toggleQrModal(show) {
+                const modal = document.getElementById('qrBusinessModal');
+                if (show) modal.classList.add('active');
+                else modal.classList.remove('active');
+            }
+
+            function showQrModal(qrCodeSlug, name) {
+                // 1. Set Nama Bisnis di Judul
+                document.getElementById('qrBusinessNameTitle').innerText = name;
+
+                // 2. Buat URL Lengkap (Ganti 'localhost:3000' dengan domain asli nanti)
+                // qrCodeSlug misalnya: "kogu-surabaya"
+                const fullUrl = `${window.location.origin}/feedback/${qrCodeSlug}`;
+
+                // Tampilkan URL di bawah QR agar user tahu linknya
+                document.getElementById('qrUrlText').innerText = fullUrl;
+
+                // 3. Bersihkan QR Code Lama
+                const container = document.getElementById("qrContainer");
+                container.innerHTML = "";
+
+                // 4. Generate QR Code Baru
+                qrCodeObj = new QRCode(container, {
+                    text: fullUrl,
+                    width: 200,
+                    height: 200,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H // High error correction
+                });
+
+                // 5. Buka Modal
+                toggleQrModal(true);
+            }
+
+            // --- FITUR DOWNLOAD QR CODE ---
+            function downloadQr() {
+                // Ambil elemen gambar yang digenerate library
+                const qrImage = document.querySelector("#qrContainer img");
+
+                if (qrImage) {
+                    // Buat link download palsu
+                    const link = document.createElement("a");
+                    link.href = qrImage.src;
+                    link.download = "QRCode-Feedback.png";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    alert("QR Code belum siap didownload.");
+                }
+            }
+
+            // Tutup jika klik backdrop
+            document.getElementById('qrBusinessModal').addEventListener('click', function(e) {
+                if (e.target === this) toggleQrModal(false);
+            });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</body>
+</html>
