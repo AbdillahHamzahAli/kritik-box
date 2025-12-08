@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . "/../services/PaymentService.php";
+namespace App\Controllers;
+
+use Exception;
+use App\Services\PaymentService;
 
 class PaymentController
 {

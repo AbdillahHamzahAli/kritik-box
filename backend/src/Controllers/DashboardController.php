@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . "/../services/DashboardService.php";
+namespace App\Controllers;
+
+use Exception;
+use App\Services\DashboardService;
 
 class DashboardController
 {

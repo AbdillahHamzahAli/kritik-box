@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . "/../../config/Config.php";
+namespace App\Middleware;
+
+use App\Config\Config;
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 

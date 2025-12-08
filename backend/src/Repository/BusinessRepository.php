@@ -1,7 +1,12 @@
 <?php
 
-require_once __DIR__ . "/../../config/Database.php";
-require_once __DIR__ . "/../models/BusinessModel.php";
+namespace App\Repository;
+
+use App\Config\Database;
+use App\Models\BusinessModel;
+use Exception;
+use PDO;
+use PDOException;
 
 class BusinessRepository
 {

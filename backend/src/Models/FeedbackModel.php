@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Models;
+use DateTimeImmutable;
+
 class FeedbackModel
 {
     public function __construct(

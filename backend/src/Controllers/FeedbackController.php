@@ -1,23 +1,25 @@
 <?php
 
-require_once __DIR__ . "/../services/UserService.php";
+namespace App\Controllers;
 
-class UsersController
+use Exception;
+use App\Services\FeedbackService;
+
+class FeedbackController
 {
-    private $userService;
+    private $feedbackService;
 
-    public function __construct(UserService $userService)
+    public function __construct(FeedbackService $feedbackService)
     {
-        $this->userService = $userService;
+        $this->feedbackService = $feedbackService;
     }
 
-    public function register(): void
+    public function create(string $uniqueCode): void
     {
         header("Content-Type: application/json");
 
         try {
             $inputData = json_decode(file_get_contents("php://input"), true);
-
             if (!$inputData) {
                 http_response_code(400);
                 echo json_encode([
@@ -27,17 +29,20 @@ class UsersController
                 return;
             }
 
-            $createdUser = $this->userService->createUser($inputData);
+            $response = $this->feedbackService->createFeedback(
+                $inputData,
+                $uniqueCode,
+            );
 
-            if ($createdUser) {
+            if ($response) {
                 http_response_code(201);
                 echo json_encode([
                     "status" => "success",
-                    "message" => "User successfully created",
-                    "data" => $createdUser,
+                    "message" => "business successfully created",
+                    "data" => $response,
                 ]);
             } else {
-                throw new Exception("Failed to create user");
+                throw new Exception("Failed to create business");
             }
         } catch (Exception $e) {
             $message = $e->getMessage();
@@ -53,18 +58,17 @@ class UsersController
         }
     }
 
-    public function login(): void
+    public function getAll(int $business_id, int $user_id): void
     {
         header("Content-Type: application/json");
-        $input = json_decode(file_get_contents("php://input"), true);
 
         try {
-            $result = $this->userService->login($input);
-
+            $feedbacks = $this->feedbackService->getAll($business_id, $user_id);
+            http_response_code(200);
             echo json_encode([
                 "status" => "success",
-                "message" => "Login berhasil",
-                "data" => $result,
+                "message" => "feedbacks retrieved successfully",
+                "data" => $feedbacks,
             ]);
         } catch (Exception $e) {
             $message = $e->getMessage();
@@ -79,31 +83,4 @@ class UsersController
             ]);
         }
     }
-
-    public function me(int $userId): void
-    {
-        header("Content-Type: application/json");
-
-        try {
-            $profile = $this->userService->getProfile($userId);
-
-            echo json_encode([
-                "status" => "success",
-                "message" => "Profile retrieved",
-                "data" => $profile,
-            ]);
-        } catch (Exception $e) {
-            $code = $e->getMessage() === "User not found" ? 404 : 500;
-            http_response_code($code);
-            echo json_encode([
-                "status" => "error",
-                "message" => $e->getMessage(),
-            ]);
-        }
-    }
-
-    // public function getAllUser() {}
-    // public function getUserById($id) {}
-    // public function editUserData($id) {}
-    // public function deleteUserById($id) {}
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Config;
+
 class Config
 {
     public static function JWT_SECRET()

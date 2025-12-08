@@ -1,21 +1,21 @@
 <?php
 
 // Load dependencies
-require_once __DIR__ . "/../repository/UserRepository.php";
-require_once __DIR__ . "/../services/UserService.php";
-require_once __DIR__ . "/../controllers/UsersController.php";
-require_once __DIR__ . "/../middleware/AuthMiddleware.php";
-require_once __DIR__ . "/../repository/BusinessRepository.php";
-require_once __DIR__ . "/../services/BusinessService.php";
-require_once __DIR__ . "/../controllers/BusinessController.php";
-require_once __DIR__ . "/../repository/FeedbackRepository.php";
-require_once __DIR__ . "/../services/FeedbackService.php";
-require_once __DIR__ . "/../controllers/FeedbackController.php";
-require_once __DIR__ . "/../repository/TransactionRepository.php";
-require_once __DIR__ . "/../services/PaymentService.php";
-require_once __DIR__ . "/../controllers/PaymentController.php";
-require_once __DIR__ . "/../services/DashboardService.php";
-require_once __DIR__ . "/../controllers/DashboardController.php";
+use App\Repository\UserRepository;
+use App\Repository\BusinessRepository;
+use App\Repository\FeedbackRepository;
+use App\Repository\TransactionRepository;
+use App\Services\UserService;
+use App\Services\BusinessService;
+use App\Services\FeedbackService;
+use App\Services\PaymentService;
+use App\Services\DashboardService;
+use App\Controllers\UsersController;
+use App\Controllers\BusinessController;
+use App\Controllers\FeedbackController;
+use App\Controllers\PaymentController;
+use App\Controllers\DashboardController;
+use App\Middleware\AuthMiddleware;
 
 $authMiddleware = new AuthMiddleware();
 

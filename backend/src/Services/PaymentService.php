@@ -1,12 +1,13 @@
 <?php
 
+namespace App\Services;
+
 use Midtrans\Config as MidtransConfig;
 use Midtrans\Snap;
-use Midtrans\Notification;
-
-require_once __DIR__ . "/../../config/Config.php";
-require_once __DIR__ . "/../repository/TransactionRepository.php";
-require_once __DIR__ . "/../repository/UserRepository.php";
+use App\Config\Config;
+use Exception;
+use App\Repository\TransactionRepository;
+use App\Repository\UserRepository;
 
 class PaymentService
 {

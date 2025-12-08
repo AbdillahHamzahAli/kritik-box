@@ -1,7 +1,13 @@
 <?php
 
-require_once __DIR__ . "/../../config/Database.php";
-require_once __DIR__ . "/../models/UserModel.php";
+namespace App\Repository;
+
+use App\Config\Database;
+use App\Models\UserModel;
+use DateTime;
+use PDO;
+use Exception;
+use PDOException;
 
 class UserRepository
 {

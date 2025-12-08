@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 class BusinessModel
 {
     public function __construct(

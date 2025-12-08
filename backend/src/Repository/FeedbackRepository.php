@@ -1,7 +1,13 @@
 <?php
 
-require_once __DIR__ . "/../../config/Database.php";
-require_once __DIR__ . "/../models/FeedbackModel.php";
+namespace App\Repository;
+
+use App\Config\Database;
+use App\Models\FeedbackModel;
+use DateTimeImmutable;
+use Exception;
+use PDO;
+use PDOException;
 
 class FeedbackRepository
 {

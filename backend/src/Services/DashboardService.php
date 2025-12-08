@@ -1,13 +1,18 @@
 <?php
 
-require_once __DIR__ . "/../repository/BusinessRepository.php";
-require_once __DIR__ . "/../repository/FeedbackRepository.php";
-require_once __DIR__ . "/../repository/UserRepository.php";
+namespace App\Services;
+
+use Exception;
+use DateTime;
+use App\Repository\BusinessRepository;
+use App\Repository\FeedbackRepository;
+use App\Repository\UserRepository;
 
 class DashboardService
 {
     private $businessRepo;
     private $feedbackRepo;
+    private $userRepo;
 
     public function __construct(
         BusinessRepository $businessRepo,

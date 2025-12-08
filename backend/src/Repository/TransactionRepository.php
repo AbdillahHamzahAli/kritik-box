@@ -1,5 +1,10 @@
 <?php
-require_once __DIR__ . "/../../config/Database.php";
+
+namespace App\Repository;
+
+use App\Config\Database;
+use Exception;
+use PDO;
 
 class TransactionRepository
 {

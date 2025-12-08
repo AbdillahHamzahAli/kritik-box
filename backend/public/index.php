@@ -1,10 +1,12 @@
 <?php
-
-require_once __DIR__ . "/../config/Database.php";
-require_once __DIR__ . "/../src/routes/api.php";
+// Autoload Composer (Tombol ON untuk semua magic di atas)
 require_once __DIR__ . "/../vendor/autoload.php";
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
-$dotenv->load();
+// Load Environment Variables (Jika di localhost)
+if (file_exists(__DIR__ . "/../.env")) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
+    $dotenv->load();
+}
 
-$db = new Database();
+// Load Routing
+require_once __DIR__ . "/../src/Routes/api.php";

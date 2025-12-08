@@ -1,14 +1,16 @@
 <?php
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use BlakvGhost\PHPValidator\Validator;
-use BlakvGhost\PHPValidator\ValidatorException;
+namespace App\Services;
 
-require_once __DIR__ . "/../../config/Config.php";
-require_once __DIR__ . "/../repository/UserRepository.php";
-require_once __DIR__ . "/../repository/BusinessRepository.php";
-require_once __DIR__ . "/../models/UserModel.php";
+use App\Config\Config;
+use DateTime;
+use Exception;
+use Firebase\JWT\JWT;
+use BlakvGhost\PHPValidator\Validator;
+
+use App\Repository\UserRepository;
+use App\Repository\BusinessRepository;
+use App\Models\UserModel;
 
 class UserService
 {
