@@ -1,58 +1,43 @@
 <?php
 
-require __DIR__ . "/../vendor/autoload.php";
-
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
-$dotenv->load();
-
 use PDO;
 use PDOException;
 
+if (file_exists(__DIR__ . "/../.env")) {
+    $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . "/../");
+    $dotenv->load();
+}
+
 class Database
 {
-    private $DB_HOST;
-    private $DB_USER;
-    private $DB_PASS;
-    private $DB_NAME;
-    private $DB_PORT;
-    public $conn;
+    private $conn;
 
-    public function __construct()
-    {
-        $this->DB_HOST = $_ENV["DB_HOST"];
-        $this->DB_USER = $_ENV["DB_USER"];
-        $this->DB_PASS = $_ENV["DB_PASS"];
-        $this->DB_NAME = $_ENV["DB_NAME"];
-        $this->DB_PORT = $_ENV["DB_PORT"];
-    }
-
-    public function connect(): ?PDO
+    public function connect()
     {
         $this->conn = null;
 
         try {
-            $dsn = "mysql:host={$this->DB_HOST};port={$this->DB_PORT};dbname={$this->DB_NAME};charset=utf8";
-            $options = [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_PERSISTENT => false,
-            ];
-            $this->conn = new \PDO(
-                $dsn,
-                $this->DB_USER,
-                $this->DB_PASS,
-                $options,
+            $host = $_ENV["DB_HOST"] ?? getenv("DB_HOST");
+            $db_name = $_ENV["DB_NAME"] ?? getenv("DB_NAME");
+            $username = $_ENV["DB_USER"] ?? getenv("DB_USER");
+            $password = $_ENV["DB_PASS"] ?? getenv("DB_PASS");
+            $port = $_ENV["DB_PORT"] ?? "3306";
+
+            $dsn =
+                "mysql:host=" .
+                $host .
+                ";dbname=" .
+                $db_name .
+                ";port=" .
+                $port;
+
+            $this->conn = new PDO($dsn, $username, $password);
+            $this->conn->setAttribute(
+                PDO::ATTR_ERRMODE,
+                PDO::ERRMODE_EXCEPTION,
             );
-        } catch (PDOException $e) {
-            error_log(
-                "[" .
-                    date("Y-m-d H:i:s") .
-                    "] Connection failed: " .
-                    $e->getMessage() .
-                    "\r\n",
-                3,
-                "../logs/error.log",
-            );
+        } catch (\PDOException $e) {
+            error_log("Connection Error: " . $e->getMessage());
         }
 
         return $this->conn;
