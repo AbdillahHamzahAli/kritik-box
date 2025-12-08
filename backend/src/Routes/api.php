@@ -1,6 +1,5 @@
 <?php
 
-// Load dependencies
 use App\Repository\UserRepository;
 use App\Repository\BusinessRepository;
 use App\Repository\FeedbackRepository;
