@@ -2,6 +2,7 @@
 
 require_once __DIR__ . "/../repository/BusinessRepository.php";
 require_once __DIR__ . "/../repository/FeedbackRepository.php";
+require_once __DIR__ . "/../repository/UserRepository.php";
 
 class DashboardService
 {
@@ -11,9 +12,11 @@ class DashboardService
     public function __construct(
         BusinessRepository $businessRepo,
         FeedbackRepository $feedbackRepo,
+        UserRepository $userRepository,
     ) {
         $this->businessRepo = $businessRepo;
         $this->feedbackRepo = $feedbackRepo;
+        $this->userRepo = $userRepository;
     }
 
     public function getStats(int $userId): array
@@ -32,11 +35,27 @@ class DashboardService
             5,
         );
 
+        $user = $this->userRepo->findById($userId);
+
+        if (!$user) {
+            throw new Exception("User not found");
+        }
+
+        $isPremium = false;
+
+        if (!empty($user->membership_expires_at)) {
+            $expiryDate = new DateTime($user->membership_expires_at);
+            $now = new DateTime();
+            if ($expiryDate > $now) {
+                $isPremium = true;
+            }
+        }
         return [
             "summary" => [
                 "total_businesses" => $totalBusinesses,
                 "total_feedbacks" => $totalFeedbacks,
                 "average_rating" => $avgRating,
+                "is_premium" => $isPremium,
             ],
             "chart" => $chartData,
             "recent_feedbacks" => $recentFeedbacks,

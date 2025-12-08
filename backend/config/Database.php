@@ -14,6 +14,7 @@ class Database
     private $DB_USER;
     private $DB_PASS;
     private $DB_NAME;
+    private $DB_PORT;
     public $conn;
 
     public function __construct()
@@ -22,6 +23,7 @@ class Database
         $this->DB_USER = $_ENV["DB_USER"];
         $this->DB_PASS = $_ENV["DB_PASS"];
         $this->DB_NAME = $_ENV["DB_NAME"];
+        $this->DB_PORT = $_ENV["DB_PORT"];
     }
 
     public function connect(): ?PDO
@@ -29,11 +31,17 @@ class Database
         $this->conn = null;
 
         try {
-            $dsn = "mysql:host={$this->DB_HOST};dbname={$this->DB_NAME};charset=utf8";
-            $this->conn = new \PDO($dsn, $this->DB_USER, $this->DB_PASS);
-            $this->conn->setAttribute(
-                PDO::ATTR_ERRMODE,
-                PDO::ERRMODE_EXCEPTION,
+            $dsn = "mysql:host={$this->DB_HOST};port={$this->DB_PORT};dbname={$this->DB_NAME};charset=utf8";
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_PERSISTENT => false,
+            ];
+            $this->conn = new \PDO(
+                $dsn,
+                $this->DB_USER,
+                $this->DB_PASS,
+                $options,
             );
         } catch (PDOException $e) {
             error_log(

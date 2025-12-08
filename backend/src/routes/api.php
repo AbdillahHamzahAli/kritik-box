@@ -34,6 +34,7 @@ $paymentService = new PaymentService($transactionRepository, $userRepository);
 $dashboardService = new DashboardService(
     $businessRepository,
     $feedbackRepository,
+    $userRepository,
 );
 
 $usersController = new UsersController($userService);

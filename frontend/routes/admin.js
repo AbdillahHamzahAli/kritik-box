@@ -3,6 +3,7 @@ const router = express.Router();
 const dashboardController = require("../controllers/dashboardController");
 const businessController = require("../controllers/businessController");
 const settingsController = require("../controllers/settingsController");
+const paymentController = require("../controllers/paymentController");
 
 const { checkAuth } = require("../middleware/authMiddleware");
 
@@ -14,5 +15,10 @@ router.post("/business/update", checkAuth, businessController.updateBusiness);
 router.post("/business/delete", checkAuth, businessController.deleteBusiness);
 
 router.get("/settings", checkAuth, settingsController.getSettingsPage);
+router.post(
+  "/payment/upgrade",
+  checkAuth,
+  paymentController.createUpgradeTransaction,
+);
 
 module.exports = router;

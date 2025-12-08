@@ -24,7 +24,7 @@ exports.getSettingsPage = async (req, res) => {
         name: "admin",
         username: "admin",
         email: "admin@example.com",
-        is_premium: false, // Boolean
+        is_premium: false,
         membership_expires_at: "2026-01-01 08:13:03",
         joined_at: "2025-12-01 11:22:52",
       },

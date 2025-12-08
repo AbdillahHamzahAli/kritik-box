@@ -115,11 +115,11 @@
                             <li style="margin-bottom: 8px;">✓ Standard QR Code</li>
 
                             <% if (user.is_premium) { %>
-                                <li style="margin-bottom: 8px; font-weight: 600; color: #059669;">✓ Export Data to Excel</li>
-                                <li style="margin-bottom: 8px; font-weight: 600; color: #059669;">✓ Unlimited Locations</li>
+                                <li style="margin-bottom: 8px; font-weight: 600; color: #059669;">✓ Word Cloud</li>
+                                <li style="margin-bottom: 8px; font-weight: 600; color: #059669;">✓ Unlimited Business</li>
                             <% } else { %>
-                                <li style="margin-bottom: 8px; opacity: 0.5;">✗ Export Data to Excel</li>
-                                <li style="margin-bottom: 8px; opacity: 0.5;">✗ Unlimited Locations</li>
+                                <li style="margin-bottom: 8px; opacity: 0.5;">✗ Word Cloud</li>
+                                <li style="margin-bottom: 8px; opacity: 0.5;">✗ Unlimited Business</li>
                             <% } %>
                         </ul>
 
@@ -127,7 +127,7 @@
                             <div class="upgrade-box">
                                 <h4>Unlock Pro Features ⚡</h4>
                                 <p>Hilangkan batasan lokasi dan dapatkan fitur export data.</p>
-                                <button class="btn btn-primary" style="background: white; color: black; width: 100%; border: none;">
+                                <button id="btnUpgrade" class="btn btn-primary" onclick="startPayment()" style="background: white; color: black; width: 100%; border: none;">
                                     Upgrade to Pro
                                 </button>
                             </div>
@@ -144,5 +144,63 @@
 
         </main>
     </div>
+    <script>
+        async function startPayment() {
+            const btn = document.getElementById('btnUpgrade');
+
+            // 1. Ubah tombol jadi loading
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                // 2. Minta Snap Token ke Node.js Controller kita
+                const response = await fetch('/admin/payment/upgrade', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const snapToken = result.snap_token;
+
+                    // 3. Buka Popup Midtrans
+                    window.snap.pay(snapToken, {
+                        onSuccess: function(result){
+                            // Pembayaran Berhasil!
+                            alert("Pembayaran Berhasil! Akun Anda sedang diproses menjadi Premium.");
+                            // Reload halaman agar status di dashboard berubah (jika backend sudah handle webhook)
+                            window.location.reload();
+                        },
+                        onPending: function(result){
+                            alert("Menunggu pembayaran Anda.");
+                            console.log(result);
+                        },
+                        onError: function(result){
+                            alert("Pembayaran gagal!");
+                            console.log(result);
+                        },
+                        onClose: function(){
+                            alert('Anda menutup popup tanpa menyelesaikan pembayaran.');
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                        }
+                    });
+
+                } else {
+                    alert('Gagal inisialisasi pembayaran: ' + result.message);
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert('Terjadi kesalahan sistem.');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
