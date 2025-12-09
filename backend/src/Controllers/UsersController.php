@@ -45,13 +45,18 @@ class UsersController
         } catch (Exception $e) {
             $message = $e->getMessage();
             $decodedMessage = json_decode($message, true);
-            $finalMessage = $decodedMessage ?? $message;
-            $code = $decodedMessage ? 401 : 500;
+
+            $code = 500;
+            if ($message === 'Email sudah terdaftar') {
+                $code = 409;
+            } else if ($decodedMessage) {
+                $code = 401;
+            }
 
             http_response_code($code);
             echo json_encode([
                 "status" => "error",
-                "message" => $finalMessage,
+                "message" => $decodedMessage ?? $message,
             ]);
         }
     }
@@ -72,13 +77,16 @@ class UsersController
         } catch (Exception $e) {
             $message = $e->getMessage();
             $decodedMessage = json_decode($message, true);
-            $finalMessage = $decodedMessage ?? $message;
-            $code = $decodedMessage ? 401 : 500;
+
+            $code = 500;
+            if ($message === 'Invalid email or password' || $decodedMessage) {
+                $code = 401;
+            }
 
             http_response_code($code);
             echo json_encode([
                 "status" => "error",
-                "message" => $finalMessage,
+                "message" => $decodedMessage ?? $message,
             ]);
         }
     }

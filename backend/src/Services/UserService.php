@@ -38,6 +38,10 @@ class UserService
             throw new Exception(json_encode($validator->getErrors()));
         }
 
+        if ($this->userRepository->findByEmail($data['email'])) {
+            throw new Exception('Email sudah terdaftar');
+        }
+
         $hashedPassword = password_hash($data["password"], PASSWORD_DEFAULT);
         $user = new UserModel(
             null,
